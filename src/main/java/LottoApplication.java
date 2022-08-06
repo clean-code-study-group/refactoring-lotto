@@ -1,46 +1,32 @@
+import lotto.LottoTicket;
+
 import java.util.*;
 
 public class LottoApplication {
     private static final int LOTTO_TICKET_PRICE = 1000;
-    public static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
+    static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
+
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("구입금액을 입력해 주세요.");
         int totalAmount = Integer.parseInt(scanner.nextLine());
         System.out.println((totalAmount / LOTTO_TICKET_PRICE) + "개를 구매했습니다.");
 
-        String[][] lottoTicketNumbersSplit = new String[totalAmount / LOTTO_TICKET_PRICE][LOTTO_TICKET_CONSISTENCY_SIZE];
+        String[][] lottoTotalTicketNumbers = new String[totalAmount / LOTTO_TICKET_PRICE][LOTTO_TICKET_CONSISTENCY_SIZE];
         int lottoTicketSize = 0;
 
+        /* 로또 구매 개수만큼 반복 */
         for (int i = 0; i < totalAmount / LOTTO_TICKET_PRICE; i++) {
-            String[] lns = new String[6];
-            int lnsSize = 0;
 
-            while (lnsSize < 6) {
-                String ln = String.valueOf(1 + new Random().nextInt(45));
+            LottoTicket lottoTicket = new LottoTicket();
+            String[] lottoNumbers = lottoTicket.generateLottoNumbers();
 
-                boolean dc = false;
+            System.out.println(Arrays.toString(lottoNumbers));
 
-                for (int j = 0; j < lnsSize; j++) {
-                    if (ln.equals(lns[j])) {
-                        dc = true;
-                        break;
-                    }
-                }
-
-                if (!dc) {
-                    lns[lnsSize] = ln;
-                    lnsSize++;
-                }
-            }
-
-            Arrays.sort(lns, Comparator.comparingInt(Integer::parseInt));
-
-            System.out.println(Arrays.toString(lns));
-
-            lottoTicketNumbersSplit[lottoTicketSize] = lns;
+            lottoTotalTicketNumbers[lottoTicketSize] = lottoNumbers;
             lottoTicketSize++;
         }
 
@@ -57,13 +43,14 @@ public class LottoApplication {
 
         System.out.println(Arrays.toString(wlns));
 
+        /* 당첨번호랑 구매한 티켓의 로또 번호가 숫자가 몇개가 일치하는지 체크 */
         int threeMatchCnt = 0;
         int fourMatchCnt = 0;
         int fiveMatchCnt = 0;
         int sixMatchCnt = 0;
 
         for (int i = 0; i < lottoTicketSize; i++) {
-            String[] lns = lottoTicketNumbersSplit[i];
+            String[] lns = lottoTotalTicketNumbers[i];
 
             int cnt = 0;
 
@@ -111,4 +98,6 @@ public class LottoApplication {
 
         System.out.println("총 수익률은" + (tWp / totalAmount) + "입니다.");
     }
+
+
 }
