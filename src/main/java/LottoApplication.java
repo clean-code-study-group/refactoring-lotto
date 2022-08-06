@@ -15,65 +15,63 @@ public class LottoApplication {
         int totalAmount = Integer.parseInt(scanner.nextLine());
         System.out.println((totalAmount / LOTTO_TICKET_PRICE) + "개를 구매했습니다.");
 
-        String[][] lottoTotalTicketNumbers = new String[totalAmount / LOTTO_TICKET_PRICE][LOTTO_TICKET_CONSISTENCY_SIZE];
+        List<List<Integer>> lottoTotalTicketNumbers = new ArrayList<>();
         int lottoTicketSize = 0;
 
         /* 로또 구매 개수만큼 반복 */
         for (int i = 0; i < totalAmount / LOTTO_TICKET_PRICE; i++) {
-
             LottoTicket lottoTicket = new LottoTicket();
-            String[] lottoNumbers = lottoTicket.generateLottoNumbers();
+            List<Integer> lottoNumbers = lottoTicket.generateLottoNumbers();
 
-            System.out.println(Arrays.toString(lottoNumbers));
+            System.out.println(lottoNumbers);
 
-            lottoTotalTicketNumbers[lottoTicketSize] = lottoNumbers;
+            lottoTotalTicketNumbers.add(lottoNumbers);
             lottoTicketSize++;
         }
 
         System.out.println();
         System.out.println("당첨 번호를 입력해 주세요.");
-        String rwlns = scanner.nextLine();
-        String[] wlns = rwlns.split(", ");
+        String rawWinningLottoNumbers = scanner.nextLine();
+        LottoTicket winningLottoTicket = new LottoTicket(rawWinningLottoNumbers.split(", "));
 
-        if (wlns.length != 6) {
+        if (winningLottoTicket.getLottoNumbers().size() != LOTTO_TICKET_CONSISTENCY_SIZE) {
             throw new IllegalArgumentException("로또 당첨 번호는 6개여야 합니다.");
         }
 
-        Arrays.sort(wlns, Comparator.comparingInt(Integer::parseInt));
-
-        System.out.println(Arrays.toString(wlns));
+        System.out.println(winningLottoTicket.getLottoNumbers());
 
         /* 당첨번호랑 구매한 티켓의 로또 번호가 숫자가 몇개가 일치하는지 체크 */
-        int threeMatchCnt = 0;
-        int fourMatchCnt = 0;
-        int fiveMatchCnt = 0;
-        int sixMatchCnt = 0;
+        int threeMatchCount = 0;
+        int fourMatchCount = 0;
+        int fiveMatchCount = 0;
+        int sixMatchCount = 0;
 
         for (int i = 0; i < lottoTicketSize; i++) {
-            String[] lns = lottoTotalTicketNumbers[i];
+            List<Integer> lottoNumbers = lottoTotalTicketNumbers.get(i);
 
-            int cnt = 0;
+            int count = 0;
 
             for (int j = 0; j < 6; j++) {
-                String ln = lns[j];
+                int lottoNumber = lottoNumbers.get(j);
 
                 for (int k = 0; k < 6; k++) {
-                    String wln = wlns[k];
+                    int winningLottoNumber = winningLottoTicket.getLottoNumbers().get(k);
 
-                    if (ln.equals(wln)) {
-                        cnt++;
+                    if (lottoNumber == winningLottoNumber) {
+                        count++;
+                        break;
                     }
                 }
             }
 
-            if (cnt == 3) {
-                threeMatchCnt++;
-            } else if (cnt == 4) {
-                fourMatchCnt++;
-            } else if (cnt == 5) {
-                fiveMatchCnt++;
-            } else if (cnt == 6) {
-                sixMatchCnt++;
+            if (count == 3) {
+                threeMatchCount++;
+            } else if (count == 4) {
+                fourMatchCount++;
+            } else if (count == 5) {
+                fiveMatchCount++;
+            } else if (count == 6) {
+                sixMatchCount++;
             }
         }
 
@@ -86,15 +84,15 @@ public class LottoApplication {
         System.out.println();
         System.out.println("당첨 통계");
         System.out.println("---------");
-        System.out.println("3개 일치 (" + threeMatchWp + "원)- " + threeMatchCnt + "개");
-        System.out.println("4개 일치 (" + fourMatchWp + "원)- " + fourMatchCnt + "개");
-        System.out.println("5개 일치 (" + fiveMatchWp + "원)- " + fiveMatchCnt + "개");
-        System.out.println("6개 일치 (" + sixMatchWp + "원)- " + sixMatchCnt + "개");
+        System.out.println("3개 일치 (" + threeMatchWp + "원)- " + threeMatchCount + "개");
+        System.out.println("4개 일치 (" + fourMatchWp + "원)- " + fourMatchCount + "개");
+        System.out.println("5개 일치 (" + fiveMatchWp + "원)- " + fiveMatchCount + "개");
+        System.out.println("6개 일치 (" + sixMatchWp + "원)- " + sixMatchCount + "개");
 
-        long tWp = threeMatchWp * threeMatchCnt;
-        tWp += fourMatchWp * fourMatchCnt;
-        tWp += fiveMatchWp * fiveMatchCnt;
-        tWp += sixMatchWp * sixMatchCnt;
+        long tWp = (long) threeMatchWp * threeMatchCount;
+        tWp += (long) fourMatchWp * fourMatchCount;
+        tWp += (long) fiveMatchWp * fiveMatchCount;
+        tWp += (long) sixMatchWp * sixMatchCount;
 
         System.out.println("총 수익률은" + (tWp / totalAmount) + "입니다.");
     }

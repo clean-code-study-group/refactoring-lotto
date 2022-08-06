@@ -1,37 +1,53 @@
 package lotto;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class LottoTicket {
 
-     static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
+    static final int LOTTO_MAX_NUMBER = 45;
 
-    public String[] generateLottoNumbers() {
+    static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
+
+    List<Integer> lottoNumbers;
+
+    public LottoTicket() {
+        this.lottoNumbers = generateLottoNumbers();
+    }
+
+    public LottoTicket(String[] rawLottoNumbers) {
+        this.lottoNumbers = Arrays.stream(rawLottoNumbers).map(Integer::parseInt).sorted().collect(Collectors.toList());
+    }
+
+    public List<Integer> generateLottoNumbers() {
         /* 로또번호 6개를 생성 */
-        String[] lns = new String[6];
-        int lnsSize = 0;
-        while (lnsSize < LOTTO_TICKET_CONSISTENCY_SIZE) {
-            String ln = String.valueOf(1 + new Random().nextInt(45));
+        List<Integer> lottoNumbers = new ArrayList<>();
+        int lottoNumbersSize = 0;
+
+        while (lottoNumbersSize < LOTTO_TICKET_CONSISTENCY_SIZE) {
+            int lottoNumber = 1 + new Random().nextInt(LOTTO_MAX_NUMBER);
 
             /* 중복체크 */
             boolean dc = false; // 생성한 로또번호가 겹치는지 체크하는 flag
-            for (int j = 0; j < lnsSize; j++) {
-                if (ln.equals(lns[j])) {
+            for (int j = 0; j < lottoNumbersSize; j++) {
+                if (lottoNumber == lottoNumbers.get(j)) {
                     dc = true;
                     break;
                 }
             }
 
             if (!dc) {
-                lns[lnsSize] = ln;
-                lnsSize++;
+                lottoNumbers.add(lottoNumber);
+                lottoNumbersSize++;
             }
         }
 
-        Arrays.sort(lns, Comparator.comparingInt(Integer::parseInt));
+        Collections.sort(lottoNumbers);
 
-        return lns;
+        return lottoNumbers;
+    }
+
+    public List<Integer> getLottoNumbers() {
+        return lottoNumbers;
     }
 }
