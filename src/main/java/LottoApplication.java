@@ -1,17 +1,20 @@
 import java.util.*;
 
 public class LottoApplication {
+    private static final int LOTTO_TICKET_PRICE = 1000;
+    public static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("구입금액을 입력해 주세요.");
-        int ta = Integer.parseInt(scanner.nextLine());
-        System.out.println((ta / 1000) + "개를 구매했습니다.");
+        int totalAmount = Integer.parseInt(scanner.nextLine());
+        System.out.println((totalAmount / LOTTO_TICKET_PRICE) + "개를 구매했습니다.");
 
-        String[][] lnss = new String[ta / 1000][6];
-        int lnssSize = 0;
+        String[][] lottoTicketNumbersSplit = new String[totalAmount / LOTTO_TICKET_PRICE][LOTTO_TICKET_CONSISTENCY_SIZE];
+        int lottoTicketSize = 0;
 
-        for (int i = 0; i < ta / 1000; i++) {
+        for (int i = 0; i < totalAmount / LOTTO_TICKET_PRICE; i++) {
             String[] lns = new String[6];
             int lnsSize = 0;
 
@@ -37,9 +40,8 @@ public class LottoApplication {
 
             System.out.println(Arrays.toString(lns));
 
-            lnss[lnssSize] = lns;
-            lnssSize++;
-
+            lottoTicketNumbersSplit[lottoTicketSize] = lns;
+            lottoTicketSize++;
         }
 
         System.out.println();
@@ -60,8 +62,8 @@ public class LottoApplication {
         int fiveMatchCnt = 0;
         int sixMatchCnt = 0;
 
-        for (int i = 0; i < lnssSize; i++) {
-            String[] lns = lnss[i];
+        for (int i = 0; i < lottoTicketSize; i++) {
+            String[] lns = lottoTicketNumbersSplit[i];
 
             int cnt = 0;
 
@@ -107,6 +109,6 @@ public class LottoApplication {
         tWp += fiveMatchWp * fiveMatchCnt;
         tWp += sixMatchWp * sixMatchCnt;
 
-        System.out.println("총 수익률은" + (tWp / ta) + "입니다.");
+        System.out.println("총 수익률은" + (tWp / totalAmount) + "입니다.");
     }
 }
