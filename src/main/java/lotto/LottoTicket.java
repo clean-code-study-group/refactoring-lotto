@@ -4,22 +4,24 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class LottoTicket {
-
     static final int LOTTO_MAX_NUMBER = 45;
-
     static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
 
-    List<Integer> lottoNumbers;
+    private List<Integer> lottoNumbers;
 
     public LottoTicket() {
         this.lottoNumbers = generateLottoNumbers();
     }
 
     public LottoTicket(String[] rawLottoNumbers) {
+        if (rawLottoNumbers.length != LOTTO_TICKET_CONSISTENCY_SIZE) {
+            throw new IllegalArgumentException(String.format("로또 번호는 %d개여야 합니다.", LOTTO_TICKET_CONSISTENCY_SIZE));
+        }
+
         this.lottoNumbers = Arrays.stream(rawLottoNumbers).map(Integer::parseInt).sorted().collect(Collectors.toList());
     }
 
-    public List<Integer> generateLottoNumbers() {
+    private List<Integer> generateLottoNumbers() {
         /* 로또번호 6개를 생성 */
         List<Integer> lottoNumbers = new ArrayList<>();
         int lottoNumbersSize = 0;
@@ -48,6 +50,6 @@ public class LottoTicket {
     }
 
     public List<Integer> getLottoNumbers() {
-        return lottoNumbers;
+        return new ArrayList<>(lottoNumbers);
     }
 }

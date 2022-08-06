@@ -1,42 +1,28 @@
+import lotto.LottoStore;
 import lotto.LottoTicket;
 
 import java.util.*;
 
 public class LottoApplication {
-    private static final int LOTTO_TICKET_PRICE = 1000;
     static final int LOTTO_TICKET_CONSISTENCY_SIZE = 6;
-
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("구입금액을 입력해 주세요.");
-        int totalAmount = Integer.parseInt(scanner.nextLine());
-        System.out.println((totalAmount / LOTTO_TICKET_PRICE) + "개를 구매했습니다.");
+        int totalPurchasedAmount = Integer.parseInt(scanner.nextLine());
+        LottoStore lottoStore = new LottoStore();
+        List<LottoTicket> boughtLottoTickets = lottoStore.buy(totalPurchasedAmount);
 
-        List<List<Integer>> lottoTotalTicketNumbers = new ArrayList<>();
-        int lottoTicketSize = 0;
-
-        /* 로또 구매 개수만큼 반복 */
-        for (int i = 0; i < totalAmount / LOTTO_TICKET_PRICE; i++) {
-            LottoTicket lottoTicket = new LottoTicket();
-            List<Integer> lottoNumbers = lottoTicket.generateLottoNumbers();
-
-            System.out.println(lottoNumbers);
-
-            lottoTotalTicketNumbers.add(lottoNumbers);
-            lottoTicketSize++;
-        }
+        // 생성된 로또티켓들의 번호를 찍습니다.
+        boughtLottoTickets.stream().map(LottoTicket::getLottoNumbers).forEach(System.out::println);
+        System.out.println(boughtLottoTickets.size() + "개를 구매했습니다.");
 
         System.out.println();
         System.out.println("당첨 번호를 입력해 주세요.");
         String rawWinningLottoNumbers = scanner.nextLine();
         LottoTicket winningLottoTicket = new LottoTicket(rawWinningLottoNumbers.split(", "));
-
-        if (winningLottoTicket.getLottoNumbers().size() != LOTTO_TICKET_CONSISTENCY_SIZE) {
-            throw new IllegalArgumentException("로또 당첨 번호는 6개여야 합니다.");
-        }
 
         System.out.println(winningLottoTicket.getLottoNumbers());
 
@@ -46,8 +32,8 @@ public class LottoApplication {
         int fiveMatchCount = 0;
         int sixMatchCount = 0;
 
-        for (int i = 0; i < lottoTicketSize; i++) {
-            List<Integer> lottoNumbers = lottoTotalTicketNumbers.get(i);
+        for (LottoTicket lottoTicket : boughtLottoTickets) {
+            List<Integer> lottoNumbers = lottoTicket.getLottoNumbers();
 
             int count = 0;
 
@@ -94,7 +80,7 @@ public class LottoApplication {
         tWp += (long) fiveMatchWp * fiveMatchCount;
         tWp += (long) sixMatchWp * sixMatchCount;
 
-        System.out.println("총 수익률은" + (tWp / totalAmount) + "입니다.");
+        System.out.println("총 수익률은" + (tWp / totalPurchasedAmount) + "입니다.");
     }
 
 
