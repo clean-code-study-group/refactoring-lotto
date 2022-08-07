@@ -45,6 +45,7 @@ public class WinningLottoStatistics {
         return totalWinningAmount;
     }
 
+    // TODO overflow (floating error) 및 zero division error 주의 (일단 둠)
     public double calculateProfitRate() {
         return (double) totalPurchasedAmount / calculateTotalWinningAmount();
     }
