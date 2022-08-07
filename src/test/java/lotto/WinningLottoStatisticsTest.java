@@ -27,8 +27,8 @@ class WinningLottoStatisticsTest {
         // given, when, then
         WinningLottoStatistics winningLottoStatistics = WinningLottoStatisticsFixture.createFixture();
 
-        assertThat(winningLottoStatistics.calculateTotalWinningAmount()).isEqualTo(
-                5000L * 1 + 50000L * 1 + 1500000L * 3 + 2000000000L * 2
+        assertThat(winningLottoStatistics.calculateProfitRate()).isEqualTo(
+            2.4971563631914157E-6
         );
     }
 }

@@ -4,12 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static lotto.LottoStore.LOTTO_TICKET_PRICE;
+
 public class WinningLottoStatistics {
     private static final int INITIALIZE_WINNING_TICKET_COUNT = 0;
 
     private final Map<Integer, Integer> matchCounts = new HashMap<>();
+    private final int totalPurchasedAmount;
 
     public WinningLottoStatistics(List<? extends LottoNumbers> lottoTickets, WinningLottoNumbers winningLottoNumbers) {
+        this.totalPurchasedAmount = LOTTO_TICKET_PRICE * lottoTickets.size();
+
         for (LottoNumbers lottoNumbers : lottoTickets) {
             int matchedCount = winningLottoNumbers.countMatches(lottoNumbers);
 
@@ -27,7 +32,7 @@ public class WinningLottoStatistics {
         return matchCounts.getOrDefault(matchedCount, INITIALIZE_WINNING_TICKET_COUNT);
     }
 
-    public long calculateTotalWinningAmount() {
+    private long calculateTotalWinningAmount() {
         long totalWinningAmount = 0L;
 
         for (Map.Entry<Integer, Integer> entry : matchCounts.entrySet()) {
@@ -38,5 +43,9 @@ public class WinningLottoStatistics {
         }
 
         return totalWinningAmount;
+    }
+
+    public double calculateProfitRate() {
+        return (double) totalPurchasedAmount / calculateTotalWinningAmount();
     }
 }

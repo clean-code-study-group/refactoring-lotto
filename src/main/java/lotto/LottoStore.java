@@ -7,7 +7,7 @@ public class LottoStore {
     private LottoStore() {
     }
 
-    private static final int LOTTO_TICKET_PRICE = 1000;
+    public static final int LOTTO_TICKET_PRICE = 1000;
 
     public static List<LottoTicket> buy(Integer totalPurchasedAmount) {
         List<LottoTicket> lottoTickets = new ArrayList<>();

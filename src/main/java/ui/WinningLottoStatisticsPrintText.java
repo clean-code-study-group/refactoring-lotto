@@ -34,7 +34,7 @@ public class WinningLottoStatisticsPrintText {
 
         IntStream.rangeClosed(WINNING_AMOUNT_START_MATCH_COUNT, WINNING_AMOUNT_END_MATCH_COUNT).forEach((matchedCount) -> appendMatchedCountText(sb, matchedCount));
 
-        appendWithNextLine(sb, "총 수익률은" + winningLottoStatistics.calculateTotalWinningAmount() + "입니다.");
+        appendWithNextLine(sb, "총 수익률은" + winningLottoStatistics.calculateProfitRate() + "입니다.");
 
         return sb.toString();
     }
